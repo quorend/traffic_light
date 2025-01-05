@@ -1,10 +1,11 @@
-CC = gcc -g
+CC = gcc -g -I lib
 
 OBJFILES = \
 main.o \
 fsm.o \
 targ.o \
-traffic_light_fsm.o
+traffic_light_fsm.o \
+CuTest.o
 
 .PHONY: all
 all: traffic_light
@@ -23,6 +24,9 @@ targ.o: src/targ.c
 
 traffic_light_fsm.o: src/traffic_light_fsm.c
 	$(CC) -o traffic_light_fsm.o -c src/traffic_light_fsm.c
+
+CuTest.o: lib/CuTest.c
+	$(CC) -o CuTest.o -c lib/CuTest.c
 
 .PHONY: clean
 clean:
