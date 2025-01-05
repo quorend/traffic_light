@@ -14,4 +14,8 @@ struct fsm_context
   uint8_t state_count;
 };
 
+void transition_state(uint8_t next_state);
+
+void do_state_actions(void);
+
 #endif /* __FSM_H__ */
