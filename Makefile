@@ -1,32 +1,36 @@
 CC = gcc -g -I lib
 
 OBJFILES = \
-main.o \
-targ.o \
-traffic_light_fsm.o \
-CuTest.o
+build/main.o \
+build/targ.o \
+build/traffic_light_fsm.o \
+build/CuTest.o
 
 .PHONY: all
-all: traffic_light
+all: build/traffic_light
 
-traffic_light: $(OBJFILES)
-	$(CC) -o traffic_light $(OBJFILES)
+build/traffic_light: build $(OBJFILES)
+	$(CC) -o build/traffic_light $(OBJFILES)
 
-main.o: src/main.c
-	$(CC) -o main.o -c src/main.c
+.PHONY: build
+build:
+	mkdir -p build
 
-targ.o: src/targ.c src/targ.h
-	$(CC) -o targ.o -c src/targ.c
+build/main.o: src/main.c
+	$(CC) -o build/main.o -c src/main.c
 
-traffic_light_fsm.o: src/traffic_light_fsm.c src/traffic_light_fsm.h
-	$(CC) -o traffic_light_fsm.o -c src/traffic_light_fsm.c
+build/targ.o: src/targ.c src/targ.h
+	$(CC) -o build/targ.o -c src/targ.c
 
-CuTest.o: lib/CuTest.c lib/CuTest.h
-	$(CC) -o CuTest.o -c lib/CuTest.c
+build/traffic_light_fsm.o: src/traffic_light_fsm.c src/traffic_light_fsm.h
+	$(CC) -o build/traffic_light_fsm.o -c src/traffic_light_fsm.c
+
+build/CuTest.o: lib/CuTest.c lib/CuTest.h
+	$(CC) -o build/CuTest.o -c lib/CuTest.c
 
 .PHONY: clean
 clean:
-	rm *.o traffic_light
+	rm build/*
 
 .PHONY: tidy
 tidy:
