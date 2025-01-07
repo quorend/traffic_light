@@ -18,6 +18,14 @@ enum fsm_states_e
     MAX_s
   };
 
+static const char *state_messages[MAX_s] =
+  {
+    [init_s] = "",
+    [red_s] = "Red Light",
+    [green_s] = "Green Light",
+    [yellow_s] = "Yellow Light",
+  };
+
 /*
  * The features of the traffic light FSM are so simple that the context doesn't
  * actually need the previous state or number of states. They remain here as a

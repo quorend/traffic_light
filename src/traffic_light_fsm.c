@@ -14,7 +14,7 @@
 static struct fsm_context fsm_context;
 
 /* Table of state function pointers for use by the fsm module */
-void *function_table[MAX_s];
+void (*function_table[MAX_s])(void);
 
 static void init_state(void);
 static void red_state(void);
@@ -23,7 +23,8 @@ static void yellow_state(void);
 
 void traffic_light_tick(void)
 {
-  printf("tick\r\n");
+  function_table[fsm_context.state_current]();
+
   return;
 }
 
@@ -50,6 +51,8 @@ void transition_state(enum fsm_states_e new_state)
 {
   fsm_context.state_previous = fsm_context.state_current;
   fsm_context.state_current = new_state;
+
+  printf("%s\r\n", state_messages[new_state]);
 
   return;
 }
