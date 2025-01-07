@@ -9,8 +9,6 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "fsm.h"
-
 enum fsm_states_e
   {
     init_s,

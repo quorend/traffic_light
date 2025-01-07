@@ -2,8 +2,21 @@
  * This file implements the traffic light state actions and transitions.
  */
 
+#include <stdint.h>
+
 #include "traffic_light_fsm.h"
 #include "CuTest.h"
+
+#define RED_CNT_MAX 20
+#define GREEN_CNT_MAX 8
+#define YELLOW_CNT_MAX 2
+
+struct fsm_context
+{
+  uint8_t state_current;
+  uint8_t state_previous;
+  uint8_t state_count;
+};
 
 static struct fsm_context fsm_context;
 
@@ -47,21 +60,58 @@ int8_t init_fsm(void)
 /* Init State actions */
 static void init_state(void)
 {
+  /* Transition to red_state */
 }
 
 /* Red State actions */
 static void red_state(void)
 {
+  uint8_t count = 0;
+
+  if (count <= RED_CNT_MAX)
+    {
+      count++;
+    }
+  else
+    {
+      /* Transition to green_state */
+    }
+
+  return;
 }
 
 /* Green State Actions */
 static void green_state(void)
 {
+  uint8_t count = 0;
+
+  if (count <= GREEN_CNT_MAX)
+    {
+      count++;
+    }
+  else
+    {
+      /* Transition to yellow_state */
+    }
+
+  return;
 }
 
 /* Yellow State actions */
 static void yellow_state(void)
 {
+  uint8_t count = 0;
+
+  if (count <= YELLOW_CNT_MAX)
+    {
+      count++;
+    }
+  else
+    {
+      /* Transition to red_state */
+    }
+
+  return;
 }
 
 /*

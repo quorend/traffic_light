@@ -2,7 +2,6 @@ CC = gcc -g -I lib
 
 OBJFILES = \
 main.o \
-fsm.o \
 targ.o \
 traffic_light_fsm.o \
 CuTest.o
@@ -15,9 +14,6 @@ traffic_light: $(OBJFILES)
 
 main.o: src/main.c
 	$(CC) -o main.o -c src/main.c
-
-fsm.o: src/fsm.c src/fsm.h
-	$(CC) -o fsm.o -c src/fsm.c
 
 targ.o: src/targ.c src/targ.h
 	$(CC) -o targ.o -c src/targ.c
