@@ -13,7 +13,6 @@
 
 static struct fsm_context fsm_context;
 
-/* Table of state function pointers for use by the fsm module */
 void (*function_table[MAX_s])(void);
 
 static void init_state(void);
@@ -74,10 +73,7 @@ static void red_state(void)
 
   count++;
 
-  if (count < RED_CNT_MAX)
-    {
-    }
-  else
+  if (count >= RED_CNT_MAX)
     {
       transition_state(green_s);
       count = 0;
@@ -93,10 +89,7 @@ static void green_state(void)
 
   count++;
 
-  if (count < GREEN_CNT_MAX)
-    {
-    }
-  else
+  if (count >= GREEN_CNT_MAX)
     {
       transition_state(yellow_s);
       count = 0;
@@ -112,10 +105,7 @@ static void yellow_state(void)
 
   count++;
 
-  if (count < YELLOW_CNT_MAX)
-    {
-    }
-  else
+  if (count >= YELLOW_CNT_MAX)
     {
       transition_state(red_s);
       count = 0;
