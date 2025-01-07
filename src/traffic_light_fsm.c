@@ -11,13 +11,6 @@
 #define GREEN_CNT_MAX 8
 #define YELLOW_CNT_MAX 2
 
-struct fsm_context
-{
-  uint8_t state_current;
-  uint8_t state_previous;
-  uint8_t state_count;
-};
-
 static struct fsm_context fsm_context;
 
 /* Table of state function pointers for use by the fsm module */
@@ -53,6 +46,14 @@ int8_t init_fsm(void)
   return 0; /* Success */
 }
 
+void transition_state(enum fsm_states_e new_state)
+{
+  fsm_context.state_previous = fsm_context.state_current;
+  fsm_context.state_current = new_state;
+
+  return;
+}
+
 /*
  * State functions.
  */
@@ -60,13 +61,13 @@ int8_t init_fsm(void)
 /* Init State actions */
 static void init_state(void)
 {
-  /* Transition to red_state */
+  transition_state(red_s);
 }
 
 /* Red State actions */
 static void red_state(void)
 {
-  uint8_t count = 0;
+  static uint8_t count = 0;
 
   if (count <= RED_CNT_MAX)
     {
@@ -74,7 +75,8 @@ static void red_state(void)
     }
   else
     {
-      /* Transition to green_state */
+      transition_state(green_s);
+      count = 0;
     }
 
   return;
@@ -83,7 +85,7 @@ static void red_state(void)
 /* Green State Actions */
 static void green_state(void)
 {
-  uint8_t count = 0;
+  static uint8_t count = 0;
 
   if (count <= GREEN_CNT_MAX)
     {
@@ -91,7 +93,8 @@ static void green_state(void)
     }
   else
     {
-      /* Transition to yellow_state */
+      transition_state(yellow_s);
+      count = 0;
     }
 
   return;
@@ -100,7 +103,7 @@ static void green_state(void)
 /* Yellow State actions */
 static void yellow_state(void)
 {
-  uint8_t count = 0;
+  static uint8_t count = 0;
 
   if (count <= YELLOW_CNT_MAX)
     {
@@ -108,7 +111,8 @@ static void yellow_state(void)
     }
   else
     {
-      /* Transition to red_state */
+      transition_state(red_s);
+      count = 0;
     }
 
   return;
@@ -183,6 +187,70 @@ void Test_init_fsm_tbl_yellow(CuTest *tc)
   CuAssertPtrNotNull(tc, function_table[yellow_s]);
 }
 
+/* Test that current state is red_s after one tick after init */
+void Test_traffic_light_tick_init(CuTest *tc)
+{
+  init_fsm();
+
+  traffic_light_tick();
+
+  enum fsm_states_e current_expected = red_s;
+  enum fsm_states_e current_actual = fsm_context.state_current;
+
+  CuAssertIntEquals(tc, current_expected, current_actual);
+}
+
+/* Test that current state is green_s after the appropriate number of ticks */
+void Test_traffic_light_tick_green(CuTest *tc)
+{
+  init_fsm();
+
+  traffic_light_tick();
+  for (uint8_t i = 0; i < RED_CNT_MAX; i++)
+    {
+      traffic_light_tick();
+    }
+
+  enum fsm_states_e current_expected = green_s;
+  enum fsm_states_e current_actual = fsm_context.state_current;
+
+  CuAssertIntEquals(tc, current_expected, current_actual);
+}
+
+/* Test that current state is yellow_s after the appropriate number of ticks */
+void Test_traffic_light_tick_yellow(CuTest *tc)
+{
+  init_fsm();
+
+  traffic_light_tick();
+  for (uint8_t i = 0; i < RED_CNT_MAX + GREEN_CNT_MAX; i++)
+    {
+      traffic_light_tick();
+    }
+
+  enum fsm_states_e current_expected = yellow_s;
+  enum fsm_states_e current_actual = fsm_context.state_current;
+
+  CuAssertIntEquals(tc, current_expected, current_actual);
+}
+
+/* Test that current state is red_s after the appropriate number of ticks */
+void Test_traffic_light_tick_red(CuTest *tc)
+{
+  init_fsm();
+
+  traffic_light_tick();
+  for (uint8_t i = 0; i < RED_CNT_MAX + GREEN_CNT_MAX + YELLOW_CNT_MAX; i++)
+    {
+      traffic_light_tick();
+    }
+
+  enum fsm_states_e current_expected = red_s;
+  enum fsm_states_e current_actual = fsm_context.state_current;
+
+  CuAssertIntEquals(tc, current_expected, current_actual);
+}
+
 /* Aggregate the above tests into a test suite */
 CuSuite *traffic_light_fsm_GetSuite()
 {
@@ -194,5 +262,9 @@ CuSuite *traffic_light_fsm_GetSuite()
   SUITE_ADD_TEST(suite, Test_init_fsm_tbl_red);
   SUITE_ADD_TEST(suite, Test_init_fsm_tbl_green);
   SUITE_ADD_TEST(suite, Test_init_fsm_tbl_yellow);
+  SUITE_ADD_TEST(suite, Test_traffic_light_tick_init);
+  SUITE_ADD_TEST(suite, Test_traffic_light_tick_green);
+  SUITE_ADD_TEST(suite, Test_traffic_light_tick_yellow);
+  SUITE_ADD_TEST(suite, Test_traffic_light_tick_red);
   return suite;
 }
