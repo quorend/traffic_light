@@ -72,9 +72,10 @@ static void red_state(void)
 {
   static uint8_t count = 0;
 
-  if (count <= RED_CNT_MAX)
+  count++;
+
+  if (count < RED_CNT_MAX)
     {
-      count++;
     }
   else
     {
@@ -90,9 +91,10 @@ static void green_state(void)
 {
   static uint8_t count = 0;
 
-  if (count <= GREEN_CNT_MAX)
+  count++;
+
+  if (count < GREEN_CNT_MAX)
     {
-      count++;
     }
   else
     {
@@ -108,9 +110,10 @@ static void yellow_state(void)
 {
   static uint8_t count = 0;
 
-  if (count <= YELLOW_CNT_MAX)
+  count++;
+
+  if (count < YELLOW_CNT_MAX)
     {
-      count++;
     }
   else
     {

@@ -26,8 +26,6 @@ int main(int argc, char **argv)
       return 0;
     }
 
-  printf("Traffic light\r\n\r\n");
-
   /* Initialize the state machine */
   if (init_fsm())
     {
